@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+model Mapel {
+  id        String      @id @default(cuid())
+  nama      String      @unique
+  slug      String      @unique
+  topik     Topik[]
+  paketSoal PaketSoal[]
+}
+
+model Topik {
+  id      String  @id @default(cuid())
+  nama    String
+  slug    String  @unique
+  mapelId String
+  mapel   Mapel   @relation(fields: [mapelId], references: [id])
+  soal    Soal[]
+}
+
+model PaketSoal {
+  id        String   @id @default(cuid())
+  judul     String
+  slug      String   @unique
+  deskripsi String?
+  mapelId   String
+  mapel     Mapel    @relation(fields: [mapelId], references: [id])
+  soal      Soal[]
+  createdAt DateTime @default(now())
+}
+
+model Soal {
+  id           String     @id @default(cuid())
+  pertanyaan   String
+  opsiA        String
+  opsiB        String
+  opsiC        String
+  opsiD        String
+  opsiE        String?
+  jawabanBenar String
+  pembahasan   String?
+  topikId      String?
+  topik        Topik?     @relation(fields: [topikId], references: [id])
+  paketId      String?
+  paket        PaketSoal? @relation(fields: [paketId], references: [id])
+  createdAt    DateTime   @default(now())
+}

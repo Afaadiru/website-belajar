@@ -1,7 +1,19 @@
-@import "tailwindcss";
+@import "tailwindcss"; /* kalau masih Tailwind v3, ganti ke @tailwind directives; sisanya sama */
 
-/* Memaksa background putih dan teks hitam secara global */
-body {
-  background-color: #ffffff;
-  color: #111827; /* Warna abu-abu sangat gelap (hampir hitam) */
+:root {
+  --stabilo: #e9ff54;
+  --pen: #d9432f;
+}
+
+::selection {
+  background: var(--stabilo);
+  color: #111;
+}
+
+/* highlight marker di belakang kata kunci */
+.mark {
+  background-image: linear-gradient(var(--stabilo), var(--stabilo));
+  background-repeat: no-repeat;
+  background-size: 100% 42%;
+  background-position: 0 84%;
 }
