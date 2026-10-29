@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Memaksa background putih dan teks hitam secara global */
+body {
+  background-color: #ffffff;
+  color: #111827; /* Warna abu-abu sangat gelap (hampir hitam) */
+}
