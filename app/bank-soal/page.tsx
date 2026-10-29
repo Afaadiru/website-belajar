@@ -25,13 +25,13 @@ async function DaftarBankSoal() {
 
   return (
     <div className="space-y-12">
-      {mapelData.map((mapel) => (
+      {mapelData.map((mapel: any) => (
         <div key={mapel.id}>
           <h2 className="font-mono text-xs tracking-widest uppercase text-gray-500 mb-4">
             {mapel.nama}
           </h2>
           <div className="flex flex-col">
-            {mapel.topik.map((topik) => (
+            {mapel.topik.map((topik: any) => (
               <Link
                 key={topik.id}
                 href={`/bank-soal/${mapel.slug}/${topik.slug}`}

@@ -42,7 +42,7 @@ async function DaftarSoal({
       {topik.soal.length === 0 ? (
         <p className="text-gray-500 italic">Belum ada soal untuk bab ini.</p>
       ) : (
-        topik.soal.map((soal, index) => (
+        topik.soal.map((soal: any, index: number) => (
           <KartuSoal key={soal.id} soal={soal} index={index} />
         ))
       )}
