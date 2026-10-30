@@ -12,7 +12,6 @@ datasource db {
 model Mapel {
   id        String      @id @default(cuid())
   nama      String      @unique
-  slug      String      @unique
   topik     Topik[]
   paketSoal PaketSoal[]
 }
