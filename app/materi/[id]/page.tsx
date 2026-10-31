@@ -28,8 +28,9 @@ const renderKonten = (text: string) => {
   return { __html: formattedLines.join("") };
 };
 
-// Komponen untuk mengambil data dari Prisma
-async function KontenMateri({ id }: { id: string }) {
+// Komponen ini yang akan membaca params dan database
+async function KontenMateri({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params; // <-- await params di dalam sini
   const materi = await prisma.materi.findUnique({
     where: { id },
   });
@@ -70,13 +71,12 @@ async function KontenMateri({ id }: { id: string }) {
   );
 }
 
-export default async function DetailMateriPage({ 
+// Halaman utama: TIDAK ada await params di sini
+export default function DetailMateriPage({ 
   params 
 }: { 
   params: Promise<{ id: string }> 
 }) {
-  const { id } = await params;
-
   return (
     <main className="bg-white min-h-screen">
       <div className="max-w-3xl mx-auto px-5 md:px-8 py-16 md:py-20">
@@ -90,7 +90,7 @@ export default async function DetailMateriPage({
             <div className="h-64 bg-gray-100 rounded w-full mt-8"></div>
           </div>
         }>
-          <KontenMateri id={id} />
+          <KontenMateri params={params} />
         </Suspense>
       </div>
     </main>
