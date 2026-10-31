@@ -3,16 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
-import KartuSoal from "@/components/kartu-soal";
-
-type Materi = {
-  id: string;
-  judul: string;
-  tipe: string;
-  konten: string;
-  youtubeId?: string;
-  soal?: any[];
-};
+import { prisma } from "@/lib/prisma";
 
 const renderKonten = (text: string) => {
   if (!text) return { __html: "" };
@@ -37,13 +28,11 @@ const renderKonten = (text: string) => {
   return { __html: formattedLines.join("") };
 };
 
-// 1. PISAHKAN LOGIKA FETCH KE KOMPONEN SENDIRI
-async function KontenMateri({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const res = await fetch(`http://localhost:3000/api/materi`, { cache: 'no-store' });
-  const data = await res.json();
-  
-  const materi: Materi = data.find((m: Materi) => m.id === id);
+// Komponen untuk mengambil data dari Prisma
+async function KontenMateri({ id }: { id: string }) {
+  const materi = await prisma.materi.findUnique({
+    where: { id },
+  });
 
   if (!materi) {
     return notFound();
@@ -76,39 +65,18 @@ async function KontenMateri({ params }: { params: Promise<{ id: string }> }) {
             dangerouslySetInnerHTML={renderKonten(materi.konten)} 
           />
         )}
-
-        {materi.soal && materi.soal.length > 0 && (
-          <div className="mt-16 pt-10 border-t-2 border-gray-900">
-            <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold mb-2">
-              Evaluasi Bab
-            </h2>
-            <p className="text-gray-500 mb-8">Uji pemahamanmu dengan 5 soal berikut.</p>
-            
-            <div className="space-y-8">
-              {materi.soal.map((s: any, index: number) => {
-                const soalFormatted = {
-                  id: `${materi.id}-soal-${index}`,
-                  pertanyaan: s.p,
-                  opsiA: s.a,
-                  opsiB: s.b,
-                  opsiC: s.c,
-                  opsiD: s.d,
-                  opsiE: s.e || null,
-                  jawabanBenar: s.j,
-                  pembahasan: s.pmb
-                };
-                return <KartuSoal key={index} soal={soalFormatted} index={index} />;
-              })}
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
 }
 
-// 2. HALAMAN UTAMA TETAP STATIS & DIBUNGKUS SUSPENSE
-export default function DetailMateri({ params }: { params: Promise<{ id: string }> }) {
+export default async function DetailMateriPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+
   return (
     <main className="bg-white min-h-screen">
       <div className="max-w-3xl mx-auto px-5 md:px-8 py-16 md:py-20">
@@ -122,7 +90,7 @@ export default function DetailMateri({ params }: { params: Promise<{ id: string 
             <div className="h-64 bg-gray-100 rounded w-full mt-8"></div>
           </div>
         }>
-          <KontenMateri params={params} />
+          <KontenMateri id={id} />
         </Suspense>
       </div>
     </main>

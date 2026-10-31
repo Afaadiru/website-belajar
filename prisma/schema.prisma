@@ -51,3 +51,13 @@ model Soal {
   paket        PaketSoal? @relation(fields: [paketId], references: [id])
   createdAt    DateTime   @default(now())
 }
+
+model Materi {
+  id        String  @id @default(cuid())
+  kelas     String
+  judul     String
+  deskripsi String
+  tipe      String  // "diktat" atau "video"
+  youtubeId String?
+  konten    String
+}
